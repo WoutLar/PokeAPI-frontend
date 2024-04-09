@@ -1,0 +1,25 @@
+// App.scss
+
+.pokemon-list {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+
+  .pokemon-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .pokemon-tile {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+}
