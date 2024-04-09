@@ -40,7 +40,8 @@
                 <h2>{details.name} Details</h2>
                 <p><strong>Height:</strong> {details.height}</p>
                 <p><strong>Weight:</strong> {details.weight}</p>
-                {/* Add more details here */}
+                <p><strong>Height:</strong> {details.height}</p>
+                <p><strong>Weight:</strong> {details.weight}</p>
             </div>
         );
     };

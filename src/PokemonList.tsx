@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './App.scss';
 import SearchBar from './SearchBar';
+import { Link } from 'react-router-dom';
+
 
 interface Pokemon {
     name: string;
@@ -36,17 +38,25 @@ const PokemonList: React.FC = () => {
         const filtered = pokemonList.filter(pokemon => pokemon.name.toLowerCase().includes(query.toLowerCase()));
         setFilteredPokemonList(filtered);
     };
+    const handleFavoriteClick = (pokemon: Pokemon) => {
+        console.log(`Pokémon ${pokemon.name} with ID ${pokemon.url.split('/').slice(-2, -1)[0]} was favorited`);
+    };
+
+
 
     return (
         <div className="pokemon-list">
             <h2>List of Pokémon:</h2>
             <div className="search-bar-container">
-                <SearchBar onSearch={handleSearch} />
+                <SearchBar onSearch={handleSearch}/>
             </div>
             <div className="pokemon-tiles">
                 {filteredPokemonList.map((pokemon, index) => (
                     <div className="pokemon-tile" key={index}>
-                        {pokemon.name}
+                        <Link to={`/pokemon/${pokemon.url.split('/').slice(-2, -1)[0]}`}>
+                            <div>{pokemon.name}</div>
+                        </Link>
+                        <button onClick={() => handleFavoriteClick(pokemon)}>Favorite</button>
                     </div>
                 ))}
             </div>

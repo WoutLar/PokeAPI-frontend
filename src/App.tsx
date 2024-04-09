@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.scss';
 import PokemonList from './PokemonList';
 import PokemonDetails from './PokemonDetails';
-import Header from "./Header.tsx"; // Assuming this component exists
+import Header from "./Header.tsx";
 
 const App: React.FC = () => {
     return (
