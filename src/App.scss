@@ -1,5 +1,3 @@
-// App.scss
-
 .pokemon-list {
   max-width: 800px;
   margin: 0 auto;
@@ -21,5 +19,61 @@
     &:hover {
       background-color: #e0e0e0;
     }
+  }
+}
+
+.pokemon-details {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  p {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #555;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+}
+
+// FavoritePokemonTile.scss
+.favorite-pokemon-tile {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+  }
+
+  button {
+    background-color: #e53935;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #c62828;
   }
 }
