@@ -1,15 +1,19 @@
+// PokemonList.tsx
 import React, { useEffect, useState } from 'react';
 import './App.scss';
 import SearchBar from './SearchBar';
 import { Link } from 'react-router-dom';
-
 
 interface Pokemon {
     name: string;
     url: string;
 }
 
-const PokemonList: React.FC = () => {
+interface PokemonListProps {
+    onFavoriteClick: (pokemonName: string) => void;
+}
+
+const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
     const [filteredPokemonList, setFilteredPokemonList] = useState<Pokemon[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -38,11 +42,6 @@ const PokemonList: React.FC = () => {
         const filtered = pokemonList.filter(pokemon => pokemon.name.toLowerCase().includes(query.toLowerCase()));
         setFilteredPokemonList(filtered);
     };
-    const handleFavoriteClick = (pokemon: Pokemon) => {
-        console.log(`Pokémon ${pokemon.name} with ID ${pokemon.url.split('/').slice(-2, -1)[0]} was favorited`);
-    };
-
-
 
     return (
         <div className="pokemon-list">
@@ -56,7 +55,7 @@ const PokemonList: React.FC = () => {
                         <Link to={`/pokemon/${pokemon.url.split('/').slice(-2, -1)[0]}`}>
                             <div>{pokemon.name}</div>
                         </Link>
-                        <button onClick={() => handleFavoriteClick(pokemon)}>Favorite</button>
+                        <button onClick={() => onFavoriteClick(pokemon.name)}>Favorite</button>
                     </div>
                 ))}
             </div>
