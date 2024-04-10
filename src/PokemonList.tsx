@@ -1,4 +1,3 @@
-// PokemonList.tsx
 import React, { useEffect, useState } from 'react';
 import './App.scss';
 import SearchBar from './SearchBar';
@@ -6,7 +5,8 @@ import { Link } from 'react-router-dom';
 
 interface Pokemon {
     name: string;
-    url: string;
+    types: string[];
+    sprite: string; // Add sprite property
 }
 
 interface PokemonListProps {
@@ -26,8 +26,22 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
                     throw new Error('Failed to fetch Pokemon list');
                 }
                 const data = await response.json();
-                setPokemonList(data.results);
-                setFilteredPokemonList(data.results);
+                const pokemons = await Promise.all(data.results.map(async (result: any) => {
+                    const response = await fetch(result.url);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch Pokemon details');
+                    }
+                    const pokemonData = await response.json();
+                    const types = pokemonData.types.map((type: any) => type.type.name);
+                    const sprite = pokemonData.sprites.other['showdown'].front_default;
+                    return {
+                        name: pokemonData.name,
+                        types,
+                        sprite
+                    };
+                }));
+                setPokemonList(pokemons);
+                setFilteredPokemonList(pokemons);
             } catch (error) {
                 console.error('Error fetching Pokemon list:', error);
             }
@@ -39,7 +53,10 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
     // Function to handle search
     const handleSearch = (query: string) => {
         setSearchQuery(query);
-        const filtered = pokemonList.filter(pokemon => pokemon.name.toLowerCase().includes(query.toLowerCase()));
+        const filtered = pokemonList.filter(pokemon =>
+            pokemon.name.toLowerCase().includes(query.toLowerCase()) ||
+            pokemon.types.some(type => type.toLowerCase().includes(query.toLowerCase()))
+        );
         setFilteredPokemonList(filtered);
     };
 
@@ -52,9 +69,13 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
             <div className="pokemon-tiles">
                 {filteredPokemonList.map((pokemon, index) => (
                     <div className="pokemon-tile" key={index}>
-                        <Link to={`/pokemon/${pokemon.url.split('/').slice(-2, -1)[0]}`}>
+                        <Link to={`/pokemon/${pokemon.name}`}>
+                            <img src={pokemon.sprite} alt={pokemon.name}/>
                             <div>{pokemon.name}</div>
                         </Link>
+                        <div>
+                            {pokemon.types.join(' / ')}
+                        </div>
                         <button onClick={() => onFavoriteClick(pokemon.name)}>Favorite</button>
                     </div>
                 ))}

@@ -9,13 +9,23 @@ interface Move {
     name: string;
 }
 
+interface Type {
+    name: string;
+}
+
 interface PokemonDetails {
     name: string;
     height: number;
     weight: number;
     abilities: Ability[];
     moves: Move[];
-    // Add more details as needed
+    types: Type[];
+    sprites: {
+        front_default: string | null;
+        back_default: string | null;
+        front_shiny: string | null;
+        back_shiny: string | null;
+    };
 }
 
 const PokemonDetails: React.FC = () => {
@@ -33,9 +43,10 @@ const PokemonDetails: React.FC = () => {
 
                 const abilities = data.abilities.map((ability: any) => ({ name: ability.ability.name }));
                 const moves = data.moves.map((move: any) => ({ name: move.move.name }));
+                const types = data.types.map((type: any) => ({ name: type.type.name }));
 
-                const { name, height, weight } = data;
-                setDetails({ name, height, weight, abilities, moves });
+                const { name, height, weight, sprites } = data; // Destructure sprites
+                setDetails({ name, height, weight, abilities, moves, types, sprites });
             } catch (error) {
                 console.error('Error fetching Pokemon details:', error);
             }
@@ -44,7 +55,6 @@ const PokemonDetails: React.FC = () => {
         fetchPokemonDetails();
     }, [id]);
 
-
     if (!details) {
         return <div>Loading...</div>;
     }
@@ -52,6 +62,16 @@ const PokemonDetails: React.FC = () => {
     return (
         <div className="pokemon-details">
             <h2>{details.name} Details</h2>
+            <p><strong>Types:</strong> {details.types.map(type => type.name).join(', ')}</p>
+            <div className="sprites">
+                {details.sprites.front_default &&
+                    <img src={details.sprites.front_default} alt={`${details.name} front`}/>}
+                {details.sprites.back_default && <img src={details.sprites.back_default} alt={`${details.name} back`}/>}
+                {details.sprites.front_shiny &&
+                    <img src={details.sprites.front_shiny} alt={`${details.name} shiny front`}/>}
+                {details.sprites.back_shiny &&
+                    <img src={details.sprites.back_shiny} alt={`${details.name} shiny back`}/>}
+            </div>
             <p><strong>Height:</strong> {details.height}</p>
             <p><strong>Weight:</strong> {details.weight}</p>
             <p><strong>Abilities:</strong> {details.abilities.map(ability => ability.name).join(', ')}</p>
