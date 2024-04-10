@@ -13,6 +13,11 @@ interface Type {
     name: string;
 }
 
+interface Stat {
+    name: string;
+    value: number;
+}
+
 interface PokemonDetails {
     name: string;
     height: number;
@@ -26,11 +31,13 @@ interface PokemonDetails {
         front_shiny: string | null;
         back_shiny: string | null;
     };
+    stats: Stat[];
 }
 
 const PokemonDetails: React.FC = () => {
-    const { id } = useParams<{ id: string }>(); // Get the "id" parameter from the URL
+    const { id } = useParams<{ id: string }>();
     const [details, setDetails] = useState<PokemonDetails | null>(null);
+    const [searchMove, setSearchMove] = useState<string>('');
 
     useEffect(() => {
         const fetchPokemonDetails = async () => {
@@ -44,9 +51,10 @@ const PokemonDetails: React.FC = () => {
                 const abilities = data.abilities.map((ability: any) => ({ name: ability.ability.name }));
                 const moves = data.moves.map((move: any) => ({ name: move.move.name }));
                 const types = data.types.map((type: any) => ({ name: type.type.name }));
+                const stats = data.stats.map((stat: any) => ({ name: stat.stat.name, value: stat.base_stat }));
 
-                const { name, height, weight, sprites } = data; // Destructure sprites
-                setDetails({ name, height, weight, abilities, moves, types, sprites });
+                const { name, height, weight, sprites } = data;
+                setDetails({ name, height, weight, abilities, moves, types, sprites, stats });
             } catch (error) {
                 console.error('Error fetching Pokemon details:', error);
             }
@@ -59,9 +67,11 @@ const PokemonDetails: React.FC = () => {
         return <div>Loading...</div>;
     }
 
+    const filteredMoves = details.moves.filter(move => move.name.toLowerCase().includes(searchMove.toLowerCase()));
+
     return (
         <div className="pokemon-details">
-            <h2>{details.name} Details</h2>
+            <h2>{details.name}:</h2>
             <p><strong>Types:</strong> {details.types.map(type => type.name).join(', ')}</p>
             <div className="sprites">
                 {details.sprites.front_default &&
@@ -75,8 +85,30 @@ const PokemonDetails: React.FC = () => {
             <p><strong>Height:</strong> {details.height}</p>
             <p><strong>Weight:</strong> {details.weight}</p>
             <p><strong>Abilities:</strong> {details.abilities.map(ability => ability.name).join(', ')}</p>
-            <p><strong>Moves:</strong> {details.moves.map(move => move.name).join(', ')}</p>
-            <Link to="/">Close</Link>
+            <p><strong>Stats:</strong></p>
+            <table>
+                <tbody>
+                {details.stats.map((stat, index) => (
+                    <tr key={index}>
+                        <td>{stat.name}</td>
+                        <td>{stat.value}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+            <p><strong>Moves:</strong></p>
+            <input
+                type="text"
+                placeholder="Search moves..."
+                value={searchMove}
+                onChange={e => setSearchMove(e.target.value)}
+            />
+            <div>
+                {filteredMoves.map((move, index) => (
+                    <span key={index}>{move.name}, </span>
+                ))}
+            </div>
+            <Link to="/" className="close-button">Close</Link>
         </div>
     );
 };

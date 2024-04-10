@@ -77,3 +77,17 @@
     background-color: #c62828;
   }
 }
+
+.close-button {
+  padding: 10px 20px;
+  background-color: #ff6666;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: #ff4d4d;
+  }
+}

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 interface Pokemon {
     name: string;
     types: string[];
-    sprite: string; // Add sprite property
+    sprite: string;
 }
 
 interface PokemonListProps {
@@ -17,11 +17,12 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
     const [filteredPokemonList, setFilteredPokemonList] = useState<Pokemon[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    //geeft error dat searchQuery niet gebruikt work maar dat word die well?**
 
     useEffect(() => {
         const fetchPokemonList = async () => {
             try {
-                const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100');
+                const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=200');
                 if (!response.ok) {
                     throw new Error('Failed to fetch Pokemon list');
                 }
@@ -50,9 +51,8 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
         fetchPokemonList();
     }, []);
 
-    // Function to handle search
     const handleSearch = (query: string) => {
-        setSearchQuery(query);
+        setSearchQuery(query); //**
         const filtered = pokemonList.filter(pokemon =>
             pokemon.name.toLowerCase().includes(query.toLowerCase()) ||
             pokemon.types.some(type => type.toLowerCase().includes(query.toLowerCase()))

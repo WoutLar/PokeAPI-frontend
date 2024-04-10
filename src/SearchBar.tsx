@@ -6,7 +6,7 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = event.target.value;
         setQuery(inputValue);
-        onSearch(inputValue.trim()); // Trigger search whenever input value changes
+        onSearch(inputValue.trim());
     };
 
     return (
