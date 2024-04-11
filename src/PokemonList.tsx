@@ -17,7 +17,7 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
     const [filteredPokemonList, setFilteredPokemonList] = useState<Pokemon[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    //geeft error dat searchQuery niet gebruikt work maar dat word die well?**
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchPokemonList = async () => {
@@ -43,6 +43,7 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
                 }));
                 setPokemonList(pokemons);
                 setFilteredPokemonList(pokemons);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching Pokemon list:', error);
             }
@@ -50,6 +51,10 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
 
         fetchPokemonList();
     }, []);
+
+    if (loading) {
+        return <div>Loading Pokémon list...</div>;
+    }
 
     const handleSearch = (query: string) => {
         setSearchQuery(query); //**
@@ -64,6 +69,7 @@ const PokemonList: React.FC<PokemonListProps> = ({ onFavoriteClick }) => {
         <div className="pokemon-list">
             <h2>List of Pokémon:</h2>
             <div className="search-bar-container">
+                <p>Search for pokemon names or types:</p>
                 <SearchBar onSearch={handleSearch}/>
             </div>
             <div className="pokemon-tiles">
